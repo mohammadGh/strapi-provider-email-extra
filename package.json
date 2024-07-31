@@ -1,0 +1,93 @@
+{
+  "name": "my-typescript-library-starter",
+  "type": "module",
+  "version": "1.1.1",
+  "packageManager": "pnpm@8.15.3",
+  "description": "A boilerplate for starting a TypeScript library, equipped with Vitest + ESLint + Commitizen + Husky + Release-it and generating beautiful change-log with Changelogen",
+  "author": "mgh <m.ghoreshi@gmail.com>",
+  "license": "MIT",
+  "homepage": "https://github.com/mohammadGh/my-typescript-library-starter",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/mohammadGh/my-typescript-library-starter"
+  },
+  "bugs": "https://github.com/mohammadGh/my-typescript-library-starter/issues",
+  "keywords": [
+    "typescript",
+    "eslint",
+    "lib starter",
+    "library",
+    "commitizen",
+    "husky",
+    "conventional-changelog",
+    "conventional-commits",
+    "release-it"
+  ],
+  "sideEffects": false,
+  "exports": {
+    ".": {
+      "types": "./dist/index.d.ts",
+      "import": "./dist/index.mjs",
+      "require": "./dist/index.cjs"
+    }
+  },
+  "main": "./dist/index.mjs",
+  "module": "./dist/index.mjs",
+  "types": "./dist/index.d.ts",
+  "typesVersions": {
+    "*": {
+      "*": [
+        "./dist/*",
+        "./dist/index.d.ts"
+      ]
+    }
+  },
+  "files": [
+    "dist"
+  ],
+  "scripts": {
+    "build": "unbuild",
+    "dev": "unbuild --stub",
+    "lint": "eslint .",
+    "prepublishOnly": "nr build",
+    "test": "vitest",
+    "coverage": "vitest --coverage",
+    "typecheck": "tsc --noEmit",
+    "prepare": "husky",
+    "cz": "cz",
+    "commit": "cz",
+    "release": "release-it"
+  },
+  "devDependencies": {
+    "@antfu/eslint-config": "^2.15.0",
+    "@antfu/ni": "^0.21.12",
+    "@antfu/utils": "^0.7.7",
+    "@commitlint/cli": "^18.6.1",
+    "@commitlint/config-conventional": "^18.6.3",
+    "@types/node": "^20.12.7",
+    "@vitest/coverage-v8": "^1.5.0",
+    "changelogen": "^0.5.5",
+    "commitizen": "^4.3.0",
+    "cspell": "^8.7.0",
+    "cz-conventional-changelog": "^3.3.0",
+    "eslint": "^8.57.0",
+    "husky": "^9.0.11",
+    "lint-staged": "^15.2.2",
+    "pnpm": "^8.15.7",
+    "release-it": "^17.2.0",
+    "release-it-beautiful-changelog": "^0.1.1",
+    "rimraf": "^5.0.5",
+    "typescript": "^5.4.5",
+    "unbuild": "^2.0.0",
+    "vite": "^5.2.10",
+    "vitest": "^1.5.0"
+  },
+  "lint-staged": {
+    "*.{js,cjs,ts,vue,yml}": "eslint --fix"
+  },
+  "config": {
+    "commitizen": {
+      "path": "./node_modules/cz-conventional-changelog"
+    }
+  }
+}

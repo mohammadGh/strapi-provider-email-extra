@@ -1,0 +1,2 @@
+npx --no-install commitlint --edit "$1"
+npx cspell --no-summary --no-progress commit-msg "$1"
