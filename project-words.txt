@@ -1,4 +1,5 @@
 antfu
 changelogen
 commitlint
+strapi
 typecheck

@@ -1,27 +1,27 @@
 {
-  "name": "my-typescript-library-starter",
+  "name": "strapi-provider-email-locale",
   "type": "module",
-  "version": "1.1.1",
+  "version": "0.0.0",
   "packageManager": "pnpm@8.15.3",
   "description": "A boilerplate for starting a TypeScript library, equipped with Vitest + ESLint + Commitizen + Husky + Release-it and generating beautiful change-log with Changelogen",
   "author": "mgh <m.ghoreshi@gmail.com>",
   "license": "MIT",
-  "homepage": "https://github.com/mohammadGh/my-typescript-library-starter",
+  "homepage": "https://github.com/mohammadGh/strapi-provider-email-locale",
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/mohammadGh/my-typescript-library-starter"
+    "url": "git+https://github.com/mohammadGh/strapi-provider-email-locale"
   },
-  "bugs": "https://github.com/mohammadGh/my-typescript-library-starter/issues",
+  "bugs": "https://github.com/mohammadGh/strapi-provider-email-locale/issues",
   "keywords": [
-    "typescript",
-    "eslint",
-    "lib starter",
-    "library",
-    "commitizen",
-    "husky",
-    "conventional-changelog",
-    "conventional-commits",
-    "release-it"
+    "strapi",
+    "provider",
+    "email-provider",
+    "locale",
+    "localization",
+    "locale-email",
+    "email-templates",
+    "localization-email",
+    "localization-email-templates"
   ],
   "sideEffects": false,
   "exports": {
@@ -31,7 +31,7 @@
       "require": "./dist/index.cjs"
     }
   },
-  "main": "./dist/index.mjs",
+  "main": "./dist/index.cjs",
   "module": "./dist/index.mjs",
   "types": "./dist/index.d.ts",
   "typesVersions": {

@@ -1,8 +1,8 @@
 import { describe, expect, it } from 'vitest'
-import { HelloFromMyTypeScriptLibrary } from '../src'
+import provider from '../src'
 
 describe('should', () => {
-  it('my hello msg should be exported correctly', () => {
-    expect(HelloFromMyTypeScriptLibrary).toEqual('Hi, it\'s just another starter library!')
+  it('provider should be a provider function', () => {
+    expect(typeof provider.init).toBe('function')
   })
 })
