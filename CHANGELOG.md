@@ -3,6 +3,17 @@
 
 All considerable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+## v0.0.1
+
+
+### 🏡 Chore
+
+- Init project structure ([32f4060](https://github.com/mohammadGh/strapi-provider-email-locale/commit/32f4060))
+
+### ❤️ Contributors
+
+- Mgh <m.ghoreshi@gmail.com>
+
 ## v1.1.1
 
 [compare changes](https://github.com/mohammadGh/my-typescript-library-starter/compare/v1.1.0...v1.1.1)

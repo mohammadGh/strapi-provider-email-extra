@@ -1,7 +1,7 @@
 {
   "name": "strapi-provider-email-locale",
   "type": "module",
-  "version": "0.0.0",
+  "version": "0.0.1",
   "packageManager": "pnpm@8.15.3",
   "description": "A boilerplate for starting a TypeScript library, equipped with Vitest + ESLint + Commitizen + Husky + Release-it and generating beautiful change-log with Changelogen",
   "author": "mgh <m.ghoreshi@gmail.com>",
