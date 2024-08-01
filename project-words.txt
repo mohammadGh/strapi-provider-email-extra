@@ -1,5 +1,9 @@
 antfu
 changelogen
 commitlint
+firstname
+lastname
 strapi
 typecheck
+mailgun
+sendgrid

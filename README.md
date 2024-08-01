@@ -1,95 +1,101 @@
-# my-typescript-library-starter
+# Strapi Email Provider Extra
 
-A boilerplate (template starter) for starting a TypeScript library with ease; equipped with:
+## Overview
 
- - **ESLint**: auto fix for formatting (no Prettier needed)
- - **Commitizen**: conventional commit interactive-cli helper
- - **Husky**: enforce eslint rules, conventional commit message before each commit
- - **Release-it**: semantic versioning, release management and publishing to npm or github/gitlab with interactive-cli helper
- - **Changelogen**: auto-generated beautiful change-log based on conventional commits
+`strapi-email-provider-extra`  is a email provider for the [Strapi CMS](https://github.com/strapi/strapi) that acts as a wrapper for various popular email providers such as [MailGun](https://market.strapi.io/providers/@strapi-provider-email-mailgun), [SendGrid](https://market.strapi.io/providers/@strapi-provider-email-sendgrid), [Nodemailer](https://market.strapi.io/providers/@strapi-provider-email-nodemailer) or etc. This plugin adds the functionality to send localized email templates based on the current or user-requested locale, enhancing the internationalization capabilities of your Strapi application.
+
+## Features
+
+- **Flexible Provider Support**: Easily integrate with your preferred email provider (Mailgun, SendGrid, Nodemailer, etc.).
+- **Localization**: Send emails using locale-specific templates to provide a personalized user experience.
+- **Customizable**: Configure and extend the plugin to suit your needs with ease.
+
+## Installation
+
+1. **Install the Plugin**:
+   ```bash
+   npm install strapi-email-provider-wrapper
+   ```
+
+2. **Configure the Plugin**:
+   Add the configuration to your `config/plugins.js` file:
+   ```javascript
+   module.exports = ({ env }) => ({
+     email: {
+       provider: 'strapi-email-provider-extra',
+       providerOptions: {
+         defaultProvider: 'sendgrid', // or 'mailgun', 'nodemailer', etc.
+         providers: {
+           sendgrid: {
+             apiKey: env('SENDGRID_API_KEY'),
+           },
+           mailgun: {
+             apiKey: env('MAILGUN_API_KEY'),
+             domain: env('MAILGUN_DOMAIN'),
+           },
+           nodemailer: {
+             service: 'gmail',
+             auth: {
+               user: env('GMAIL_USER'),
+               pass: env('GMAIL_PASS'),
+             },
+           },
+         },
+         defaultLocale: 'en', // Default locale
+         templates: {
+           en: {
+             welcome: 'templates/welcome_en.html',
+             resetPassword: 'templates/resetPassword_en.html',
+           },
+           fr: {
+             welcome: 'templates/welcome_fr.html',
+             resetPassword: 'templates/resetPassword_fr.html',
+           },
+           // Add more locales and templates as needed
+         },
+       },
+     },
+   });
+   ```
 
 ## Usage
-**1) clone:** first clone the repo (our used the github green button `Use this template` on the top-right of this window and change project-related fields in package json.
-> [!IMPORTANT]
-> After cloning the repo, replace `name`, `version`, `description`, `author`, `homepage` and `repository related links` fields in `package.json` to use this template.
 
-** ** Now enter repo's directory and **install dependency** using 'npm' or 'pnpm':
+To use the email provider wrapper in your Strapi application, you can call the `send` method provided by the plugin.
 
-``` shell
-pnpm i
+### Example
+
+```javascript
+const emailService = strapi.plugins['email'].services.email;
+
+const emailOptions = {
+  to: 'user@example.com',
+  subject: 'Welcome to Our Service',
+  template: 'welcome',
+  locale: 'fr', // Optional, defaults to 'en' or configured default locale
+};
+
+await emailService.send(emailOptions);
 ```
 
-**2)** to **build** project:
-``` shell
-pnpm build
-```
+## Configuration Options
 
-**3)** to **commit** using commitizen-cli, after adding modified files to  stage, enter `pnpm commit` instead of `git commit`:
-``` shell
-git add .
-pnpm commit
-```
+- **defaultProvider**: The default email provider to use if none is specified.
+- **providers**: Configuration for each supported email provider.
+- **defaultLocale**: The default locale to use for email templates.
+- **templates**: Object defining the paths to email templates for each locale.
 
-**4)** to **release** using release-it cli:
-``` sell
-pnpm release
-```
-after releasing the `change-log doc` automatically generated to `CHANGELOG.md` file at the root of the project.
+## Contributing
 
-## ESLint & ESLint Configuration
-We use @antfu amazing eslint configuration. Js file `eslint.config.js` configures the `eslint`. It extends antfu's configuration but you can customize it. for example if you prefer to use double-quotations for string, change this file as:
-
-``` javascript
-import antfu from '@antfu/eslint-config'
-
-export default antfu({
-  stylistic: {
-    quotes: 'double'
-  },
-})
-```
-## Conventional Commits & Husky Hooks
-we use `Commitizen` for conventional commits. `husky` is used to enforce conventional commit messages with `commitlint`.
-
-## Test & Test Coverage
-`Vitest` is used for running tests and measure test coverage.
-
-`coverage-v8` is used to obtain coverage metrics.
-
-The test and coverage config file is `vitest.config.ts`. for example to exclude config files in the root of project from coverage analysis, we config `vitest.config.ts` like follow:
-
-```js
-import { configDefaults, defineConfig } from 'vitest/config'
-
-export default defineConfig({
-  test: {
-    coverage: {
-      exclude: [
-        ...configDefaults.exclude,
-        '*.config.js',
-        '*.config.ts',
-      ],
-    },
-  },
-})
-```
-
-## Release-it for Releasing
-We use `release-it` for version management and publish to anywhere (npm or github). We also use its hooks to execute any command we need to test, build, and publish our project.
-
-## Auto Changelog based on Conventional Commits
-We use `changelogen` to generate beautiful changelogs using Conventional Commits.
-
-## CSpell
-`CSpell` used to automatically check for spelling errors when committing files and writing commit messages.
-
-If there are spelling errors in the staged files for commit, `husky` will prevent you from committing.
-Also, if the commit message text has spelling errors, `husky` will still prevent the commit.
-
-Additional Notes:
-
- - You can configure CSpell in `cspell.json` file in your project directory.
- - You can list words that you want `CSpell` to ignore in `/project-words.txt` file.
+We welcome contributions to improve this project. To contribute, please fork the repository and submit a pull request.
 
 ## License
-[MIT](./LICENSE) License
+
+This project is licensed under the MIT License. See the [LICENSE](LICENSE) file for details.
+
+## Acknowledgements
+
+This project was inspired by the need for flexible and localized email sending capabilities within the Strapi CMS ecosystem.
+
+With Strapi Email Provider Wrapper, you can now send personalized, localized emails with ease, leveraging your preferred email provider. Enjoy streamlined communication with your international user base!
+
+For any issues or feature requests, please open an issue on our [Issues](https://github.com/yourusername/strapi-email-provider-wrapper/issues).
