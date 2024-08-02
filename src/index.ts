@@ -1,6 +1,8 @@
+import importSync from 'import-sync'
+import { name } from '../package.json'
 import type { EmailProviderConfig, EmailProviderModule, SendOptions } from './types'
 
-const EXTRA_EMAIL_PROVIDER_NAME = 'strapi-provider-email-locale'
+const PACKAGE_NAME = name
 
 interface ProviderOption {
   mock?: boolean
@@ -17,7 +19,7 @@ interface Settings {
 
 /* eslint-disable no-console */
 export default {
-  async init(providerOptions: ProviderOption, settings: Settings) {
+  init(providerOptions: ProviderOption, settings: Settings) {
     const extraEmailProviderMock = {
       send(options: SendOptions): void {
         const { from, to, cc, bcc, replyTo, subject, text, html, ...rest } = options
@@ -33,43 +35,35 @@ export default {
           html,
           ...rest,
         }
-        strapi.log.debug('[extra-email-provider] [mock mode] email-send() called')
-        console.log(providerOptions)
-        console.log(settings)
+        strapi.log.debug('[extra-email-provider::mock-mode] email-send() called with email data:')
         console.log(msg)
       },
     }
 
     // if extra-provider is in mock mode, we just log send-mail params to console
-    if (providerOptions.mock) {
-      strapi.log.debug('return mock extra')
+    if (providerOptions.mock)
       return extraEmailProviderMock
-    }
 
     // load main email provider
-    console.log(providerOptions)
     const mainProviderID: string = providerOptions.defaultProvider
     const mainProviderName = providerOptions.providers[mainProviderID].provider || providerOptions.defaultProvider
     const mainProviderConfig = providerOptions.providers[mainProviderID]
     let mainProvider = null
 
-    // check recursive use of 'extra-email-provider' usages
-    console.log(mainProviderName, mainProviderConfig)
-    if (mainProviderName === EXTRA_EMAIL_PROVIDER_NAME) {
-      console.log('we are in mock option')
+    // check recursive use of 'extra-email-provider'
+    if (mainProviderName === PACKAGE_NAME) {
       if (!(mainProviderConfig.providerOptions as any).mock)
-        throw new Error(`You should only use ${EXTRA_EMAIL_PROVIDER_NAME} in mock mode.`)
+        throw new Error(`You should only use "${PACKAGE_NAME}" in mock mode inside "providers".`)
       mainProvider = extraEmailProviderMock
     }
     else {
-      mainProvider = await loadProvider(mainProviderConfig)
+      strapi.log.debug(`[extra-email-provider] try loading provider: ${mainProviderName}`)
+      mainProvider = loadProvider(mainProviderConfig)
+      strapi.log.debug(`[extra-email-provider] ${mainProviderName} loaded successfully`)
     }
 
     return {
       send(options: SendOptions): void {
-        strapi.log.debug('[extra-email-provider] email-send() called')
-        strapi.log.debug(`[extra-email-provider] main provider is: ${mainProviderName} with this config:`)
-        console.log(mainProviderConfig)
         strapi.log.debug('[extra-email-provider] calling main provider send-email')
         mainProvider.send(options)
       },
@@ -77,7 +71,7 @@ export default {
   },
 }
 
-async function loadProvider(providerConfig: EmailProviderConfig) {
+function loadProvider(providerConfig: EmailProviderConfig) {
   const providerName = providerConfig.provider.toLowerCase()
   let provider: EmailProviderModule
 
@@ -98,7 +92,7 @@ async function loadProvider(providerConfig: EmailProviderConfig) {
   }
 
   try {
-    provider = await import(modulePath)
+    provider = importSync(modulePath)
   }
   catch (err) {
     throw new Error(`Could not load email provider "${providerName}".`)
