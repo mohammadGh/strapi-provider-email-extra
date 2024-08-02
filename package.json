@@ -58,6 +58,9 @@
     "commit": "cz",
     "release": "release-it"
   },
+  "dependencies": {
+    "import-sync": "^2.2.2"
+  },
   "devDependencies": {
     "@antfu/eslint-config": "^2.15.0",
     "@antfu/ni": "^0.21.12",
@@ -89,8 +92,5 @@
     "commitizen": {
       "path": "./node_modules/cz-conventional-changelog"
     }
-  },
-  "dependencies": {
-    "import-sync": "^2.2.2"
   }
 }
