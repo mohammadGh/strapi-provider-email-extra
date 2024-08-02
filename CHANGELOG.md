@@ -3,6 +3,18 @@
 
 All considerable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+## v0.0.4
+
+[compare changes](https://github.com/mohammadGh/strapi-provider-email-extra/compare/v0.0.3...v0.0.4)
+
+### 🏡 Chore
+
+- Update deps ([54e73b1](https://github.com/mohammadGh/strapi-provider-email-extra/commit/54e73b1))
+
+### ❤️ Contributors
+
+- Mgh <m.ghoreshi@gmail.com>
+
 ## v0.0.3
 
 [compare changes](https://github.com/mohammadGh/strapi-provider-email-extra/compare/v0.0.2...v0.0.3)
