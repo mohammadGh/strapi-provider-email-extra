@@ -58,9 +58,6 @@
     "commit": "cz",
     "release": "release-it"
   },
-  "dependencies": {
-    "import-sync": "^2.2.2"
-  },
   "devDependencies": {
     "@antfu/eslint-config": "^2.24.1",
     "@antfu/ni": "^0.22.0",

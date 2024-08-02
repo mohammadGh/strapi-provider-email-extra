@@ -1,4 +1,3 @@
-import importSync from 'import-sync'
 import { name } from '../package.json'
 import type { EmailProviderConfig, EmailProviderModule, SendOptions } from './types'
 
@@ -94,7 +93,8 @@ function loadProvider(providerConfig: EmailProviderConfig, defaultSetting: Setti
   }
 
   try {
-    provider = importSync(modulePath)
+    // eslint-disable-next-line ts/no-require-imports
+    provider = require(modulePath)
   }
   catch {
     throw new Error(`Could not load email provider "${providerName}".`)
