@@ -55,7 +55,7 @@
          },
        },
      },
-   });
+   })
    ```
 
 ## Usage
@@ -65,16 +65,16 @@ To use the email provider wrapper in your Strapi application, you can call the `
 ### Example
 
 ```javascript
-const emailService = strapi.plugins['email'].services.email;
+const emailService = strapi.plugins.email.services.email
 
 const emailOptions = {
   to: 'user@example.com',
   subject: 'Welcome to Our Service',
   template: 'welcome',
   locale: 'fr', // Optional, defaults to 'en' or configured default locale
-};
+}
 
-await emailService.send(emailOptions);
+await emailService.send(emailOptions)
 ```
 
 ## Configuration Options

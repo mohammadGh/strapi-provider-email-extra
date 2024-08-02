@@ -35,7 +35,7 @@ export default {
           html,
           ...rest,
         }
-        strapi.log.debug('[extra-email-provider::mock-mode] email-send() called with email data:')
+        strapi.log.debug('[extra-email-provider::mock-mode] send-email() called with email data:')
         console.log(msg)
       },
     }
@@ -85,16 +85,18 @@ function loadProvider(providerConfig: EmailProviderConfig, defaultSetting: Setti
       && typeof error === 'object'
       && 'code' in error
       && error.code === 'MODULE_NOT_FOUND'
-    )
+    ) {
       modulePath = providerName
-    else
+    }
+    else {
       throw error
+    }
   }
 
   try {
     provider = importSync(modulePath)
   }
-  catch (err) {
+  catch {
     throw new Error(`Could not load email provider "${providerName}".`)
   }
 
