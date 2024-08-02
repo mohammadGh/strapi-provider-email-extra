@@ -58,7 +58,7 @@ export default {
     }
     else {
       strapi.log.debug(`[extra-email-provider] try loading provider: ${mainProviderName}`)
-      mainProvider = loadProvider(mainProviderConfig)
+      mainProvider = loadProvider(mainProviderConfig, settings)
       strapi.log.debug(`[extra-email-provider] ${mainProviderName} loaded successfully`)
     }
 
@@ -71,7 +71,7 @@ export default {
   },
 }
 
-function loadProvider(providerConfig: EmailProviderConfig) {
+function loadProvider(providerConfig: EmailProviderConfig, defaultSetting: Settings) {
   const providerName = providerConfig.provider.toLowerCase()
   let provider: EmailProviderModule
 
@@ -101,5 +101,5 @@ function loadProvider(providerConfig: EmailProviderConfig) {
   if (!provider.init)
     throw new Error(`Email provider "${providerName}" dose not have "init" method.`)
 
-  return provider.init(providerConfig.providerOptions, providerConfig.settings)
+  return provider.init(providerConfig.providerOptions, { ...defaultSetting, ...providerConfig.settings })
 }
