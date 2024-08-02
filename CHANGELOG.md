@@ -3,6 +3,26 @@
 
 All considerable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+## v0.0.2
+
+[compare changes](https://github.com/mohammadGh/strapi-provider-email-extra/compare/v0.0.1...v0.0.2)
+
+### 🚀 Enhancements
+
+- Load main provider based on defaultProvider option ([9a505bc](https://github.com/mohammadGh/strapi-provider-email-extra/commit/9a505bc))
+
+### 💅 Refactors
+
+- Refactor provider ([06c1403](https://github.com/mohammadGh/strapi-provider-email-extra/commit/06c1403))
+
+### 📦 Build
+
+- Add import-sync ([e80e662](https://github.com/mohammadGh/strapi-provider-email-extra/commit/e80e662))
+
+### ❤️ Contributors
+
+- Mgh <m.ghoreshi@gmail.com>
+
 ## v0.0.1
 
 
