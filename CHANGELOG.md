@@ -3,6 +3,19 @@
 
 All considerable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+## v0.1.0
+
+[compare changes](https://github.com/mohammadGh/strapi-provider-email-extra/compare/v0.0.4...v0.1.0)
+
+### 🩹 Fixes
+
+- Fix sync load of module ([466cab8](https://github.com/mohammadGh/strapi-provider-email-extra/commit/466cab8))
+- Lint the source code ([b4fb2ea](https://github.com/mohammadGh/strapi-provider-email-extra/commit/b4fb2ea))
+
+### ❤️ Contributors
+
+- Mgh <m.ghoreshi@gmail.com>
+
 ## v0.0.4
 
 [compare changes](https://github.com/mohammadGh/strapi-provider-email-extra/compare/v0.0.3...v0.0.4)
