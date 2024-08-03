@@ -4,11 +4,25 @@ import type { EmailProviderConfig, EmailProviderModule, SendOptions } from './ty
 const PACKAGE_NAME = name
 
 interface ProviderOption {
-  mock?: boolean
+  mock: boolean
   defaultProvider: string
   providers: {
     [key: string]: EmailProviderConfig
   }
+  dynamicTemplates: {
+    enabled: boolean
+    collection: string
+  }
+}
+
+const defaultProviderOption = {
+  mock: false,
+  defaultProvider: '',
+  providers: null,
+  dynamicTemplates: {
+    enabled: true,
+    collection: 'api::test-template.test-template',
+  },
 }
 
 interface Settings {
@@ -39,6 +53,9 @@ export default {
       },
     }
 
+    // apply defaultProviderOptions
+    providerOptions = applyDefaults(defaultProviderOption, providerOptions)
+
     // if extra-provider is in mock mode, we just log send-mail params to console
     if (providerOptions.mock)
       return extraEmailProviderMock
@@ -62,9 +79,37 @@ export default {
     }
 
     return {
-      send(options: SendOptions): void {
-        strapi.log.debug('[extra-email-provider] calling main provider send-email')
-        mainProvider.send(options)
+      async send(options: SendOptions): Promise<void> {
+        // check dynamic-template
+        if (providerOptions.dynamicTemplates.enabled) {
+          const collectionName = providerOptions.dynamicTemplates.collection
+          const emailSubject = options.subject
+
+          // first check is email-template collection exists
+          const contentTypes = strapi.container.get('content-types')
+          if (!contentTypes.keys().includes(collectionName)) {
+            strapi.log.warn(`[extra-email-provider] collection "${collectionName}" not exist to load dynamic email template`)
+          }
+          else {
+          // get email-template based on email's subject
+            const templateEntry = await strapi.entityService.findOne(collectionName, 1, {
+              filters: {
+                matchSubject: {
+                  $contains: emailSubject,
+                },
+              },
+            })
+            if (!templateEntry) {
+              strapi.log.warn(`[extra-email-provider] No dynamic email template found for email subject "${emailSubject}" in collection template "${collectionName}"`)
+            }
+            else {
+              strapi.log.debug(`[extra-email-provider] dynamic templates is found for email subject "${emailSubject}" in collection template "${collectionName}"`)
+              return mainProvider.send({ ...options, ...templateEntry })
+            }
+          }
+        }
+        strapi.log.debug(`[extra-email-provider] calling main provider send-email with: ${mainProviderName}`)
+        return mainProvider.send(options)
       },
     }
   },
@@ -104,4 +149,9 @@ function loadProvider(providerConfig: EmailProviderConfig, defaultSetting: Setti
     throw new Error(`Email provider "${providerName}" dose not have "init" method.`)
 
   return provider.init(providerConfig.providerOptions, { ...defaultSetting, ...providerConfig.settings })
+}
+
+function applyDefaults(...objects: any[]) {
+  const deepCopyObjects = objects.map(object => JSON.parse(JSON.stringify(object)))
+  return deepCopyObjects.reduce((merged, current) => ({ ...merged, ...current }), {})
 }
