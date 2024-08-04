@@ -19,44 +19,59 @@
 
 2. **Configure the Plugin**:
    Add the configuration to your `config/plugins.js` file:
-   ```javascript
-   module.exports = ({ env }) => ({
-     email: {
-       provider: 'strapi-email-provider-extra',
-       providerOptions: {
-         defaultProvider: 'sendgrid', // or 'mailgun', 'nodemailer', etc.
-         providers: {
-           sendgrid: {
-             apiKey: env('SENDGRID_API_KEY'),
-           },
-           mailgun: {
-             apiKey: env('MAILGUN_API_KEY'),
-             domain: env('MAILGUN_DOMAIN'),
-           },
-           nodemailer: {
-             service: 'gmail',
-             auth: {
-               user: env('GMAIL_USER'),
-               pass: env('GMAIL_PASS'),
-             },
-           },
-         },
-         defaultLocale: 'en', // Default locale
-         templates: {
-           en: {
-             welcome: 'templates/welcome_en.html',
-             resetPassword: 'templates/resetPassword_en.html',
-           },
-           fr: {
-             welcome: 'templates/welcome_fr.html',
-             resetPassword: 'templates/resetPassword_fr.html',
-           },
-           // Add more locales and templates as needed
-         },
-       },
-     },
-   })
-   ```
+    ```javascript
+    module.exports = ({ env }) => ({
+      email: {
+        config: {
+
+          provider: 'strapi-provider-email-extra',
+          providerOptions: {
+            defaultProvider: 'nodemailer', // or 'mailgun', 'mailjet', etc.
+            providers: {
+              nodemailer: {
+                provider: 'nodemailer',
+                providerOptions: {
+                  host: 'smtp.ethereal.email',
+                  port: 587,
+                  secure: false,
+                  auth: {
+                    user: 'claire.daugherty82@ethereal.email',
+                    pass: 'w6nhfjaAnKd7Asczzv',
+                  }
+                }
+              }
+            },
+
+            // default template options
+            dynamicTemplates: {
+              enabled: true,
+              collection: 'api::email-template.email-template',
+              subjectMatcherField: 'subjectMatcher',
+              testEmailMatcherSubject: 'STRAPI TEST MAIL'
+            }
+          },
+
+          // email settings
+          settings: {
+            defaultFrom: 'info@mycompany.co',
+            defaultFromName: 'My Company'
+          },
+        }
+      }
+    })
+    ```
+3. **create a collection content in `Content-Type Builder` to localize your email template:**
+
+    Now, create a collection named `EmailTemplate` which api id: `email-template`. check `internationalization` checkbox in advance-setting tab when creating this collection.
+    The `EmailTemplate` collection should contains this fields:
+      - `subjectMatcher` as text
+      - `subject` as text for your email subject
+      - `text` as rich-text for your email body
+      - `html` as rich-text for your email body as html
+
+4. **Add your email templates for "Account Confirmation" or "Reset-password" or any subject with your prefer locales :**
+
+    Now, add email templates with any locale you want to `EmailTemplate`.
 
 ## Usage
 
