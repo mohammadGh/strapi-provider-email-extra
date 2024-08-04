@@ -3,6 +3,27 @@
 
 All considerable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+## v0.2.0
+
+[compare changes](https://github.com/mohammadGh/strapi-provider-email-extra/compare/v0.1.0...v0.2.0)
+
+### 🚀 Enhancements
+
+- Add dynamic-template feature ([ff64652](https://github.com/mohammadGh/strapi-provider-email-extra/commit/ff64652))
+- Get dynamic templates based on default locale or requested locale ([517c7b6](https://github.com/mohammadGh/strapi-provider-email-extra/commit/517c7b6))
+
+### 🩹 Fixes
+
+- Fix applying default options to actual options ([bfaffda](https://github.com/mohammadGh/strapi-provider-email-extra/commit/bfaffda))
+
+### 📖 Documentation
+
+- Add usage steps to usage section ([3064639](https://github.com/mohammadGh/strapi-provider-email-extra/commit/3064639))
+
+### ❤️ Contributors
+
+- Mgh <m.ghoreshi@gmail.com>
+
 ## v0.1.0
 
 [compare changes](https://github.com/mohammadGh/strapi-provider-email-extra/compare/v0.0.4...v0.1.0)
