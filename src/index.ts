@@ -48,7 +48,7 @@ export default {
           html,
           ...rest,
         }
-        strapi.log.debug('[extra-email-provider::mock-mode] send-email() called with email data:')
+        strapi.log.info('[extra-email-provider] [mock-mode] send-email() called with this email data:')
         console.log(msg)
       },
     }
@@ -83,7 +83,11 @@ export default {
         // check dynamic-template
         if (providerOptions.dynamicTemplates.enabled) {
           const collectionName = providerOptions.dynamicTemplates.collection
-          const emailSubject = options.subject
+
+          let emailSubject = options.subject
+          if (emailSubject && emailSubject.toLowerCase().startsWith('strapi test mail to:')) {
+            emailSubject = 'Strapi test mail'
+          }
 
           // first check is email-template collection exists
           const contentTypes = strapi.container.get('content-types')
@@ -91,14 +95,22 @@ export default {
             strapi.log.warn(`[extra-email-provider] collection "${collectionName}" not exist to load dynamic email template`)
           }
           else {
-          // get email-template based on email's subject
-            const templateEntry = await strapi.entityService.findOne(collectionName, 1, {
+            // get email-template based on email's subject
+            const defaultLocale = await strapi.plugins.i18n.services.locales?.getDefaultLocale()
+            const currentLocale = strapi.requestContext.get()?.query?.locale
+            strapi.log.debug(`[extra-email-provider] default-locale is: "${defaultLocale}", and requested locale is: "${currentLocale}"`)
+
+            const templateEntries = await strapi.entityService.findMany(collectionName, {
+              locale: currentLocale || defaultLocale || undefined,
               filters: {
-                matchSubject: {
-                  $contains: emailSubject,
-                },
+                subjectMatcher: emailSubject,
               },
+              start: 0,
+              limit: 1,
             })
+
+            const templateEntry = templateEntries && templateEntries[0]
+
             if (!templateEntry) {
               strapi.log.warn(`[extra-email-provider] No dynamic email template found for email subject "${emailSubject}" in collection template "${collectionName}"`)
             }
