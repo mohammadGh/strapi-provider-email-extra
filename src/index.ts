@@ -1,3 +1,4 @@
+import { defu } from 'defu'
 import { name } from '../package.json'
 import type { EmailProviderConfig, EmailProviderModule, SendOptions } from './types'
 
@@ -12,6 +13,8 @@ interface ProviderOption {
   dynamicTemplates: {
     enabled: boolean
     collection: string
+    subjectMatcherField: string
+    testEmailMatcherSubject: string
   }
 }
 
@@ -22,6 +25,8 @@ const defaultProviderOption = {
   dynamicTemplates: {
     enabled: true,
     collection: 'api::test-template.test-template',
+    subjectMatcherField: 'subjectMatcher',
+    testEmailMatcherSubject: 'Strapi test mail',
   },
 }
 
@@ -54,7 +59,7 @@ export default {
     }
 
     // apply defaultProviderOptions
-    providerOptions = applyDefaults(defaultProviderOption, providerOptions)
+    providerOptions = defu(providerOptions, defaultProviderOption)
 
     // if extra-provider is in mock mode, we just log send-mail params to console
     if (providerOptions.mock)
@@ -85,8 +90,10 @@ export default {
           const collectionName = providerOptions.dynamicTemplates.collection
 
           let emailSubject = options.subject
-          if (emailSubject && emailSubject.toLowerCase().startsWith('strapi test mail to:')) {
-            emailSubject = 'Strapi test mail'
+
+          // check if the email is from 'test email delivery' (from email plugin configuration panel in strapi-admin)
+          if (emailSubject && emailSubject.toLowerCase().startsWith(providerOptions.dynamicTemplates.testEmailMatcherSubject.toLowerCase())) {
+            emailSubject = providerOptions.dynamicTemplates.testEmailMatcherSubject
           }
 
           // first check is email-template collection exists
@@ -100,14 +107,15 @@ export default {
             const currentLocale = strapi.requestContext.get()?.query?.locale
             strapi.log.debug(`[extra-email-provider] default-locale is: "${defaultLocale}", and requested locale is: "${currentLocale}"`)
 
-            const templateEntries = await strapi.entityService.findMany(collectionName, {
+            const whichTemplateQuery = {
               locale: currentLocale || defaultLocale || undefined,
-              filters: {
-                subjectMatcher: emailSubject,
-              },
+              filters: {} as any,
               start: 0,
               limit: 1,
-            })
+            }
+            whichTemplateQuery.filters[providerOptions.dynamicTemplates.subjectMatcherField] = { $eqi: emailSubject }
+
+            const templateEntries = await strapi.entityService.findMany(collectionName, whichTemplateQuery)
 
             const templateEntry = templateEntries && templateEntries[0]
 
@@ -161,9 +169,4 @@ function loadProvider(providerConfig: EmailProviderConfig, defaultSetting: Setti
     throw new Error(`Email provider "${providerName}" dose not have "init" method.`)
 
   return provider.init(providerConfig.providerOptions, { ...defaultSetting, ...providerConfig.settings })
-}
-
-function applyDefaults(...objects: any[]) {
-  const deepCopyObjects = objects.map(object => JSON.parse(JSON.stringify(object)))
-  return deepCopyObjects.reduce((merged, current) => ({ ...merged, ...current }), {})
 }

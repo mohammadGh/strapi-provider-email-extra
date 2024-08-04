@@ -1,9 +1,10 @@
 antfu
 changelogen
 commitlint
+defu
 firstname
 lastname
-strapi
-typecheck
 mailgun
 sendgrid
+strapi
+typecheck
