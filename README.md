@@ -2,7 +2,13 @@
 
 ## Overview
 
-`strapi-email-provider-extra`  is a email provider for the [Strapi CMS](https://github.com/strapi/strapi) that acts as a wrapper for various popular email providers such as [MailGun](https://market.strapi.io/providers/@strapi-provider-email-mailgun), [SendGrid](https://market.strapi.io/providers/@strapi-provider-email-sendgrid), [Nodemailer](https://market.strapi.io/providers/@strapi-provider-email-nodemailer) or etc. This plugin adds the functionality to send localized email templates based on the current or user-requested locale, enhancing the internationalization capabilities of your Strapi application.
+`strapi-email-provider-extra`  is a email provider for the [Strapi CMS](https://github.com/strapi/strapi) that acts as a wrapper for various popular email providers such as
+[MailGun](https://market.strapi.io/providers/@strapi-provider-email-mailgun),
+[SendGrid](https://market.strapi.io/providers/@strapi-provider-email-sendgrid),
+[Mailjet](https://github.com/ijsto/strapi-provider-email-mailjet),
+[Azure Email](https://market.strapi.io/providers/strapi-provider-email-azure),
+[Resend](https://market.strapi.io/providers/strapi-provider-email-resend),
+[Nodemailer](https://market.strapi.io/providers/@strapi-provider-email-nodemailer) or etc. This plugin adds the functionality to send localized email templates based on the current or user-requested locale, enhancing the internationalization capabilities of your Strapi application.
 
 ## Features
 
@@ -14,7 +20,7 @@
 
 1. **Install the Plugin**:
    ```bash
-   npm install strapi-email-provider-wrapper
+   npm install strapi-email-provider-extra
    ```
 
 2. **Configure the Plugin**:
@@ -47,7 +53,7 @@
               enabled: true,
               collection: 'api::email-template.email-template',
               subjectMatcherField: 'subjectMatcher',
-              testEmailMatcherSubject: 'STRAPI TEST MAIL'
+              testEmailMatcherSubject: 'Strapi test mail'
             }
           },
 
@@ -66,27 +72,45 @@
     The `EmailTemplate` collection should contains this fields:
       - `subjectMatcher` as text
       - `subject` as text for your email subject
+      - `from` as email (used in the from section of email)
       - `text` as rich-text for your email body
       - `html` as rich-text for your email body as html
 
 4. **Add your email templates for "Account Confirmation" or "Reset-password" or any subject with your prefer locales :**
 
-    Now, add email templates with any locale you want to `EmailTemplate`.
+    Now, add email templates with any locale you want to `EmailTemplate` with `subjectMatcher` for different categories:
+      - `subjectMatcher: 'Account Confirmation'`: for emails that the system will send when new user created to confirm account.
+      - `subjectMatcher: 'Reset Password'`: for emails that the system will send when user forget the password.
+      - `subjectMatcher: 'Strapi test mail'`:for test emails that you can send them through Strapi Admin UI.
 
-## Usage
+## Usage Examples
+Now, when new user registered or forgot-password, the email content automatically fetched from your localized test templates with proper locale.
+the proper locale is chosen from default locale of strapi (can set in Strapi Admin UI), or from request's query option.
 
-To use the email provider wrapper in your Strapi application, you can call the `send` method provided by the plugin.
+For example, to send a France email template in user registration api, call the register api like this with `locale=fr` in query params:
 
-### Example
+```javascript
+fetch('http://localhost:1337/api/auth/local/register?locale=fr', {
+  method: 'POST',
+  body: {
+    username: 'my-user',
+    email: 'user-email@gmail.com',
+    pass: '123456'
+  }
+})
+  .then(response => response.text())
+  .then(result => console.log(result))
+  .catch(error => console.error(error))
+```
+To send localized emails in your Strapi application, you can call the `send` method provided by the email's plugin.
 
 ```javascript
 const emailService = strapi.plugins.email.services.email
 
 const emailOptions = {
   to: 'user@example.com',
-  subject: 'Welcome to Our Service',
-  template: 'welcome',
-  locale: 'fr', // Optional, defaults to 'en' or configured default locale
+  subject: 'Welcome to Our Service', // the subject must exist in your test-template collection in `subjectMatcher` field.
+  locale: 'fr', // Optional, defaults to configured default locale of strapi or will be fetched from user's request query.
 }
 
 await emailService.send(emailOptions)
@@ -94,10 +118,9 @@ await emailService.send(emailOptions)
 
 ## Configuration Options
 
-- **defaultProvider**: The default email provider to use if none is specified.
+- **defaultProvider**: The default email provider to use for sending email.
 - **providers**: Configuration for each supported email provider.
-- **defaultLocale**: The default locale to use for email templates.
-- **templates**: Object defining the paths to email templates for each locale.
+- **dynamicTemplates**: Configuration for localized email templates.
 
 ## Contributing
 
@@ -111,6 +134,6 @@ This project is licensed under the MIT License. See the [LICENSE](LICENSE) file 
 
 This project was inspired by the need for flexible and localized email sending capabilities within the Strapi CMS ecosystem.
 
-With Strapi Email Provider Wrapper, you can now send personalized, localized emails with ease, leveraging your preferred email provider. Enjoy streamlined communication with your international user base!
+With Strapi Email Provider Extra, you can now send personalized, localized emails with ease, leveraging your preferred email provider. Enjoy streamlined communication with your international user base!
 
-For any issues or feature requests, please open an issue on our [Issues](https://github.com/yourusername/strapi-email-provider-wrapper/issues).
+For any issues or feature requests, please open an issue on our [Issues](https://github.com/yourusername/strapi-email-provider-extra/issues).
