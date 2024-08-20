@@ -3,6 +3,18 @@
 
 All considerable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+## v0.2.2
+
+[compare changes](https://github.com/mohammadGh/strapi-provider-email-extra/compare/v0.2.1...v0.2.2)
+
+### 🏡 Chore
+
+- Better debug info ([25d67ea](https://github.com/mohammadGh/strapi-provider-email-extra/commit/25d67ea))
+
+### ❤️ Contributors
+
+- Mgh <m.ghoreshi@gmail.com>
+
 ## v0.2.1
 
 [compare changes](https://github.com/mohammadGh/strapi-provider-email-extra/compare/v0.2.0...v0.2.1)
