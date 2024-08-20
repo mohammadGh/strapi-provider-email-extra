@@ -53,7 +53,7 @@ export default {
           html,
           ...rest,
         }
-        strapi.log.info('[extra-email-provider] [mock-mode] send-email() called with this email data:')
+        info('[mock-mode] send-email() called with this email data:')
         console.log(msg)
       },
     }
@@ -78,9 +78,9 @@ export default {
       mainProvider = extraEmailProviderMock
     }
     else {
-      strapi.log.debug(`[extra-email-provider] try loading provider: ${mainProviderName}`)
+      debug(`Try loading provider: ${mainProviderName}`)
       mainProvider = loadProvider(mainProviderConfig, settings)
-      strapi.log.debug(`[extra-email-provider] ${mainProviderName} loaded successfully`)
+      debug(`Provider: ${mainProviderName} loaded successfully`)
     }
 
     return {
@@ -99,13 +99,13 @@ export default {
           // first check is email-template collection exists
           const contentTypes = strapi.container.get('content-types')
           if (!contentTypes.keys().includes(collectionName)) {
-            strapi.log.warn(`[extra-email-provider] collection "${collectionName}" not exist to load dynamic email template`)
+            warn(`Collection "${collectionName}" not exist to load dynamic email template`)
           }
           else {
             // get email-template based on email's subject
             const defaultLocale = await strapi.plugins.i18n.services.locales?.getDefaultLocale()
             const currentLocale = strapi.requestContext.get()?.query?.locale
-            strapi.log.debug(`[extra-email-provider] default-locale is: "${defaultLocale}", and requested locale is: "${currentLocale}"`)
+            debug(`Default-locale is: "${defaultLocale}", and requested locale is: "${currentLocale}"`)
 
             const whichTemplateQuery = {
               locale: currentLocale || defaultLocale || undefined,
@@ -120,19 +120,19 @@ export default {
             const templateEntry = templateEntries && templateEntries[0]
 
             if (!templateEntry) {
-              strapi.log.warn(`[extra-email-provider] No dynamic email template found for email subject "${emailSubject}" in collection template "${collectionName}"`)
+              warn(`No dynamic email template found for email subject "${emailSubject}" in collection template "${collectionName}"`)
             }
             else {
-              strapi.log.debug(`[extra-email-provider] dynamic templates is found for email subject "${emailSubject}" in collection template "${collectionName}"`)
-              // strapi.log.debug(`merging dynamic template with default settings:\n`)
+              debug(`Dynamic templates is found for email subject "${emailSubject}" in collection template "${collectionName}"`)
+              // debug(`merging dynamic template with default settings:\n`)
               const mergedOptions = { ...options, ...templateEntry }
               // console.log(mergedOptions)
-              strapi.log.debug(`try sending email with main provider: ${mainProviderName}`)
+              debug(`Try sending email with main provider: ${mainProviderName}`)
               return mainProvider.send(mergedOptions)
             }
           }
         }
-        strapi.log.debug(`[extra-email-provider] calling main provider send-email with: ${mainProviderName}`)
+        debug(`Calling main provider send-email with: ${mainProviderName}`)
         return mainProvider.send(options)
       },
     }
@@ -173,4 +173,16 @@ function loadProvider(providerConfig: EmailProviderConfig, defaultSetting: Setti
     throw new Error(`Email provider "${providerName}" dose not have "init" method.`)
 
   return provider.init(providerConfig.providerOptions, { ...defaultSetting, ...providerConfig.settings })
+}
+
+function warn(msg: string) {
+  strapi.log.warn(`[${PACKAGE_NAME}] ${msg}`)
+}
+
+function debug(msg: string) {
+  strapi.log.debug(`[${PACKAGE_NAME}] ${msg}`)
+}
+
+function info(msg: string) {
+  strapi.log.info(`[${PACKAGE_NAME}] ${msg}`)
 }
