@@ -126,6 +126,8 @@ export default {
               strapi.log.debug(`[extra-email-provider] dynamic templates is found for email subject "${emailSubject}" in collection template "${collectionName}"`)
               strapi.log.debug(`merging dynamic template with default settings:\n`)
               const mergedOptions = { ...options, ...templateEntry }
+              console.log(options)
+              console.log(templateEntry)
               console.log(mergedOptions)
               strapi.log.debug(`try sending email with main provider: ${mainProviderName}`)
               return mainProvider.send(mergedOptions)
