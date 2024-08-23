@@ -150,7 +150,6 @@ export default {
                 }
                 template.text = template.text && await makeTemplate(template.text, user, { CODE })
                 template.html = template.html && await makeTemplate(template.html, user, { CODE })
-                console.log(template)
               }
 
               // debug(`merging dynamic template with default settings:\n`)
