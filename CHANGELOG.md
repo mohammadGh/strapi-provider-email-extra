@@ -3,6 +3,26 @@
 
 All considerable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+## v0.2.4
+
+[compare changes](https://github.com/mohammadGh/strapi-provider-email-extra/compare/v0.2.3...v0.2.4)
+
+### 🚀 Enhancements
+
+- Add interpolation feature to dynamic template ([b782fab](https://github.com/mohammadGh/strapi-provider-email-extra/commit/b782fab))
+
+### 💅 Refactors
+
+- Log fixed ([4e9f9fe](https://github.com/mohammadGh/strapi-provider-email-extra/commit/4e9f9fe))
+
+### 🤖 CI
+
+- Force install in ci to avoid lock-file issues ([90837f2](https://github.com/mohammadGh/strapi-provider-email-extra/commit/90837f2))
+
+### ❤️ Contributors
+
+- Mgh <m.ghoreshi@gmail.com>
+
 ## v0.2.3
 
 [compare changes](https://github.com/mohammadGh/strapi-provider-email-extra/compare/v0.2.2...v0.2.3)
