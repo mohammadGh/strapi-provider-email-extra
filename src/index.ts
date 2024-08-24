@@ -32,8 +32,8 @@ const defaultProviderOption = {
     subjectMatcherField: 'subjectMatcher',
     testEmailMatcherSubject: 'Strapi test mail',
     forgotPasswordPath: '/api/auth/forgot-password',
-    sendEmailConfirmationPath: 'api/auth/send-email-confirmation',
-    registerPath: 'api/auth/local/register',
+    sendEmailConfirmationPath: '/api/auth/send-email-confirmation',
+    registerPath: '/api/auth/local/register',
   },
 }
 
@@ -133,7 +133,7 @@ export default {
             else {
               debug(`Dynamic templates is found for email subject "${emailSubject}" in collection template "${collectionName}"`)
 
-              // try interpolate template with context data like confirmationToken
+              // try interpolate template with context data like confirmation-token or rest-password-token
               if (template.text || template.html) {
                 let user, CODE
                 const email = strapiContext?.request?.body?.email
@@ -148,13 +148,12 @@ export default {
                     CODE = user && user.confirmationToken
                   }
                 }
-                template.text = template.text && await makeTemplate(template.text, user, { CODE })
-                template.html = template.html && await makeTemplate(template.html, user, { CODE })
+                template.text = template.text && await makeTemplate(template.text, { user, path: requestPath, data: { CODE } })
+                template.html = template.html && await makeTemplate(template.html, { user, path: requestPath, data: { CODE } })
               }
 
-              // debug(`merging dynamic template with default settings:\n`)
               const mergedOptions = defu(template, options)
-              // console.log(mergedOptions)
+
               debug(`Try sending email with main provider: ${mainProviderName}`)
               return mainProvider.send(mergedOptions)
             }

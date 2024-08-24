@@ -1,4 +1,6 @@
 /* eslint-disable ts/no-require-imports */
+// based on code in strapi-users-permissions plugin
+
 import _ from 'lodash'
 
 const {
@@ -9,13 +11,13 @@ const {
 
 const { getAbsoluteAdminUrl, getAbsoluteServerUrl, sanitize } = require('@strapi/utils')
 
-export async function makeTemplate(layout: string, user: any, data: any) {
+export async function makeTemplate(layout: string, params: { path: string, user: any, data: any }) {
   const interData = {
-    // URL: urlJoin(getAbsoluteServerUrl(strapi.config), apiPrefix, '/auth/email-confirmation'),
+    URL: getAbsoluteServerUrl(strapi.config) + params.path,
     SERVER_URL: getAbsoluteServerUrl(strapi.config),
     ADMIN_URL: getAbsoluteAdminUrl(strapi.config),
-    USER: await getUserInfo(user),
-    ...data,
+    USER: await getUserInfo(params.user),
+    ...params.data,
   }
 
   const allowedTemplateVariables = keysDeep(interData)
