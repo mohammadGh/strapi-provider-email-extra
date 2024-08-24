@@ -3,6 +3,18 @@
 
 All considerable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+## v0.3.0
+
+[compare changes](https://github.com/mohammadGh/strapi-provider-email-extra/compare/v0.2.4...v0.3.0)
+
+### 🚀 Enhancements
+
+- Add url, server-url, admin-url context vars in template interpolation ([e1c4b9b](https://github.com/mohammadGh/strapi-provider-email-extra/commit/e1c4b9b))
+
+### ❤️ Contributors
+
+- Mgh <m.ghoreshi@gmail.com>
+
 ## v0.2.4
 
 [compare changes](https://github.com/mohammadGh/strapi-provider-email-extra/compare/v0.2.3...v0.2.4)
