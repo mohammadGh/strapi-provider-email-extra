@@ -1,4 +1,5 @@
 /* eslint-disable ts/no-require-imports */
+/* eslint-disable perfectionist/sort-imports */
 // based on code in strapi-users-permissions plugin
 
 import _ from 'lodash'
