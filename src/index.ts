@@ -1,6 +1,6 @@
+import type { EmailProviderConfig, EmailProviderModule, SendOptions } from './types'
 import { defu } from 'defu'
 import { name } from '../package.json'
-import type { EmailProviderConfig, EmailProviderModule, SendOptions } from './types'
 import { fetchUserByEmail, makeTemplate } from './template'
 
 const PACKAGE_NAME = name
@@ -15,28 +15,31 @@ interface ProviderOption {
     enabled: boolean
     collection: string
     subjectMatcherField: string
-    testEmailMatcherSubject: string
-    forgotPasswordPath: string
-    sendEmailConfirmationPath: string
-    registerPath: string
+    testEmailSubjectToMatch: string
+    forgotPasswordUrl: string
+    sendEmailConfirmationUrl: string
+    registerUrl: string
   }
 }
 
-const defaultProviderOption = {
+const defaultProviderOption: ProviderOption = {
   mock: false,
   defaultProvider: '',
-  providers: null,
+  providers: {},
   dynamicTemplates: {
     enabled: true,
-    collection: 'api::test-template.test-template',
+    collection: 'api::email-template.email-template',
     subjectMatcherField: 'subjectMatcher',
-    testEmailMatcherSubject: 'Strapi test mail',
-    forgotPasswordPath: '/api/auth/forgot-password',
-    sendEmailConfirmationPath: '/api/auth/send-email-confirmation',
-    registerPath: '/api/auth/local/register',
+    testEmailSubjectToMatch: 'Strapi test mail',
+    forgotPasswordUrl: '/api/auth/forgot-password',
+    sendEmailConfirmationUrl: '/api/auth/send-email-confirmation',
+    registerUrl: '/api/auth/local/register',
   },
 }
 
+/**
+ * email settings like default from or to and other fields
+ */
 interface Settings {
   defaultFrom: string
   defaultReplyTo: string
@@ -99,58 +102,56 @@ export default {
           let emailSubject = options.subject
 
           // check if the email is from 'test email delivery' (from email plugin configuration panel in strapi-admin)
-          if (emailSubject && emailSubject.toLowerCase().startsWith(providerOptions.dynamicTemplates.testEmailMatcherSubject.toLowerCase())) {
-            emailSubject = providerOptions.dynamicTemplates.testEmailMatcherSubject
+          if (emailSubject && emailSubject.toLowerCase().startsWith(providerOptions.dynamicTemplates.testEmailSubjectToMatch.toLowerCase())) {
+            emailSubject = providerOptions.dynamicTemplates.testEmailSubjectToMatch
           }
 
           // first check is email-template collection exists
-          const contentTypes = strapi.container.get('content-types')
-          if (!contentTypes.keys().includes(collectionName)) {
-            warn(`Collection "${collectionName}" not exist to load dynamic email template`)
+          const contentTypes = strapi.contentTypes// v4: strapi.container.get('content-types')
+          if (!contentTypes.keys().includes(collectionName))
+            throw new Error(`Collection "${collectionName}" does not exist to load dynamic email template.`)
+
+          // get email-template based on email's subject
+          const defaultLocale = await strapi.plugins.i18n.services.locales?.getDefaultLocale()
+          const strapiContext = strapi.requestContext.get()
+          const currentLocale = strapiContext?.query?.locale
+          debug(`Default-locale is: "${defaultLocale}", and requested locale is: "${currentLocale}"`)
+
+          const whichTemplateQuery = {
+            locale: currentLocale || defaultLocale || undefined,
+            filters: {} as any,
+            start: 0,
+            limit: 1,
+          }
+          whichTemplateQuery.filters[providerOptions.dynamicTemplates.subjectMatcherField] = { $eqi: emailSubject }
+
+          const templateEntries = await strapi.entityService.findMany(collectionName, whichTemplateQuery)
+
+          const template = templateEntries && templateEntries[0]
+
+          if (!template) {
+            warn(`No dynamic email template found for email subject "${emailSubject}" in collection template "${collectionName}"`)
           }
           else {
-            // get email-template based on email's subject
-            const defaultLocale = await strapi.plugins.i18n.services.locales?.getDefaultLocale()
-            const strapiContext = strapi.requestContext.get()
-            const currentLocale = strapiContext?.query?.locale
-            debug(`Default-locale is: "${defaultLocale}", and requested locale is: "${currentLocale}"`)
+            debug(`Dynamic templates is found for email subject "${emailSubject}" in collection template "${collectionName}"`)
 
-            const whichTemplateQuery = {
-              locale: currentLocale || defaultLocale || undefined,
-              filters: {} as any,
-              start: 0,
-              limit: 1,
-            }
-            whichTemplateQuery.filters[providerOptions.dynamicTemplates.subjectMatcherField] = { $eqi: emailSubject }
-
-            const templateEntries = await strapi.entityService.findMany(collectionName, whichTemplateQuery)
-
-            const template = templateEntries && templateEntries[0]
-
-            if (!template) {
-              warn(`No dynamic email template found for email subject "${emailSubject}" in collection template "${collectionName}"`)
-            }
-            else {
-              debug(`Dynamic templates is found for email subject "${emailSubject}" in collection template "${collectionName}"`)
-
-              // try interpolate template with context data like confirmation-token or rest-password-token
-              if (template.text || template.html) {
-                let user, CODE
-                const email = strapiContext?.request?.body?.email
-                const requestPath = strapiContext?.request?.path
-                if (email) {
-                  if (requestPath === providerOptions.dynamicTemplates.forgotPasswordPath) {
-                    user = await fetchUserByEmail(email)
-                    CODE = user && user.resetPasswordToken
-                  }
-                  else if (requestPath === providerOptions.dynamicTemplates.registerPath || requestPath === providerOptions.dynamicTemplates.sendEmailConfirmationPath) {
-                    user = await fetchUserByEmail(email)
-                    CODE = user && user.confirmationToken
-                  }
+            // try interpolate template with context data like confirmation-token or rest-password-token
+            if (template.text || template.html) {
+              let user, CODE
+              const email = strapiContext?.request?.body?.email
+              const requestPath = strapiContext?.request?.path
+              if (email) {
+                if (requestPath === providerOptions.dynamicTemplates.forgotPasswordUrl) {
+                  user = await fetchUserByEmail(email)
+                  CODE = user && user.resetPasswordToken
                 }
-                template.text = template.text && await makeTemplate(template.text, { user, path: requestPath, data: { CODE } })
-                template.html = template.html && await makeTemplate(template.html, { user, path: requestPath, data: { CODE } })
+                else if (requestPath === providerOptions.dynamicTemplates.registerUrl || requestPath === providerOptions.dynamicTemplates.sendEmailConfirmationUrl) {
+                  user = await fetchUserByEmail(email)
+                  CODE = user && user.confirmationToken
+                }
               }
+              template.text = template.text && await makeTemplate(template.text, { user, path: requestPath, data: { CODE } })
+              template.html = template.html && await makeTemplate(template.html, { user, path: requestPath, data: { CODE } })
 
               const mergedOptions = defu(template, options)
 
