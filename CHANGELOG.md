@@ -3,6 +3,19 @@
 
 All considerable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+## v0.4.0
+
+[compare changes](https://github.com/mohammadGh/strapi-provider-email-extra/compare/v0.3.0...v0.4.0)
+
+### 🏡 Chore
+
+- Update to strapi 5 ([4a12fd8](https://github.com/mohammadGh/strapi-provider-email-extra/commit/4a12fd8))
+- Disable import-order rule ([9d040a8](https://github.com/mohammadGh/strapi-provider-email-extra/commit/9d040a8))
+
+### ❤️ Contributors
+
+- Mgh <m.ghoreshi@gmail.com>
+
 ## v0.3.0
 
 [compare changes](https://github.com/mohammadGh/strapi-provider-email-extra/compare/v0.2.4...v0.3.0)
