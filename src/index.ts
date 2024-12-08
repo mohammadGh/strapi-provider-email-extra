@@ -2,6 +2,7 @@ import type { EmailProviderConfig, EmailProviderModule, SendOptions } from './ty
 import { defu } from 'defu'
 import { name } from '../package.json'
 import { fetchUserByEmail, makeTemplate } from './template'
+import { hasKey } from './utils'
 
 const PACKAGE_NAME = name
 
@@ -108,7 +109,7 @@ export default {
 
           // first check is email-template collection exists
           const contentTypes = strapi.contentTypes// v4: strapi.container.get('content-types')
-          if (!contentTypes.keys().includes(collectionName))
+          if (!hasKey(contentTypes, collectionName))
             throw new Error(`Collection "${collectionName}" does not exist to load dynamic email template.`)
 
           // get email-template based on email's subject
