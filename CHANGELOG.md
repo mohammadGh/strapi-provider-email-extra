@@ -3,6 +3,22 @@
 
 All considerable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+## v0.5.0
+
+[compare changes](https://github.com/mohammadGh/strapi-provider-email-extra/compare/v0.4.0...v0.5.0)
+
+### 🩹 Fixes
+
+- Fix email template Interpolation based on strapi-utils v5 ([ad61644](https://github.com/mohammadGh/strapi-provider-email-extra/commit/ad61644))
+
+### 📖 Documentation
+
+- Update for strapi v5 ([061de12](https://github.com/mohammadGh/strapi-provider-email-extra/commit/061de12))
+
+### ❤️ Contributors
+
+- Mgh <m.ghoreshi@gmail.com>
+
 ## v0.4.0
 
 [compare changes](https://github.com/mohammadGh/strapi-provider-email-extra/compare/v0.3.0...v0.4.0)
