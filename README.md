@@ -12,9 +12,10 @@
 
 ## Features
 
+- **Compatible with Strapi V5**: for Strapi V4 use 0.4.0 versions
 - **Flexible Provider Support**: Easily integrate with your preferred email provider (Mailgun, SendGrid, Nodemailer, etc.).
 - **Localization**: Send emails using locale-specific templates to provide a personalized user experience.
-- **Customizable**: Configure and extend the plugin to suit your needs with ease.
+- **Dynamic Templates**: Establish a unified content-type structure for managing and modifying various email templates.
 
 ## Installation
 
@@ -53,7 +54,10 @@
               enabled: true,
               collection: 'api::email-template.email-template',
               subjectMatcherField: 'subjectMatcher',
-              testEmailMatcherSubject: 'Strapi test mail'
+              testEmailSubjectToMatch: 'Strapi test mail',
+              forgotPasswordUrl: '/api/auth/forgot-password',
+              sendEmailConfirmationUrl: '/api/auth/send-email-confirmation',
+              registerUrl: '/api/auth/local/register',
             }
           },
 
