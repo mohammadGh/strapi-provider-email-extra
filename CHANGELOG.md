@@ -3,6 +3,18 @@
 
 All considerable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+## v0.6.0
+
+[compare changes](https://github.com/mohammadGh/strapi-provider-email-extra/compare/v0.5.0...v0.6.0)
+
+### 🚀 Enhancements
+
+- Add vars option to support additional variables in dynamic template interpolation ([f01b5b8](https://github.com/mohammadGh/strapi-provider-email-extra/commit/f01b5b8))
+
+### ❤️ Contributors
+
+- Mgh <m.ghoreshi@gmail.com>
+
 ## v0.5.0
 
 [compare changes](https://github.com/mohammadGh/strapi-provider-email-extra/compare/v0.4.0...v0.5.0)
