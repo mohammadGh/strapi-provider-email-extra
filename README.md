@@ -58,6 +58,9 @@
               forgotPasswordUrl: '/api/auth/forgot-password',
               sendEmailConfirmationUrl: '/api/auth/send-email-confirmation',
               registerUrl: '/api/auth/local/register',
+              vars: {
+                // additional variables to be used in dynamic templates interpolation
+              }
             }
           },
 
@@ -124,7 +127,7 @@ await emailService.send(emailOptions)
 
 - **defaultProvider**: The default email provider to use for sending email.
 - **providers**: Configuration for each supported email provider.
-- **dynamicTemplates**: Configuration for localized email templates.
+- **dynamicTemplates**: Configuration for dynamic and localized email templates.
 
 ## Contributing
 

@@ -20,6 +20,7 @@ interface ProviderOption {
     forgotPasswordUrl: string
     sendEmailConfirmationUrl: string
     registerUrl: string
+    vars: { [key: string]: string | number | boolean | undefined } // additional variables to be used in dynamic templates interpolation
   }
 }
 
@@ -35,6 +36,8 @@ const defaultProviderOption: ProviderOption = {
     forgotPasswordUrl: '/api/auth/forgot-password',
     sendEmailConfirmationUrl: '/api/auth/send-email-confirmation',
     registerUrl: '/api/auth/local/register',
+    vars: {
+    },
   },
 }
 
@@ -151,8 +154,8 @@ export default {
                   CODE = user && user.confirmationToken
                 }
               }
-              template.text = template.text && await makeTemplate(template.text, { user, path: requestPath, data: { CODE } })
-              template.html = template.html && await makeTemplate(template.html, { user, path: requestPath, data: { CODE } })
+              template.text = template.text && await makeTemplate(template.text, { path: requestPath, user, data: { ...providerOptions.dynamicTemplates.vars, CODE } })
+              template.html = template.html && await makeTemplate(template.html, { path: requestPath, user, data: { ...providerOptions.dynamicTemplates.vars, CODE } })
 
               const mergedOptions = defu(template, options)
 
